@@ -1,6 +1,6 @@
 Object Detection using Single Shot MultiBox Detector (SSD) algorithm:
 
-Please download the following file before running the object_detection.py file. This file is used to train the SSD. The link is as follows:
+Please download the following file before running the object_detection.py file and keep the downloaded file in the same folder. This file is used to train the SSD. The link is as follows:
 https://drive.google.com/open?id=1FiN8I6tQykG1fjhrERtUd7FuXSFGXnLo
 
 

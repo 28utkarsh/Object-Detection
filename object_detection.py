@@ -7,6 +7,18 @@ import cv2
 from data import BaseTransform, VOC_CLASSES as labelmap
 from ssd import build_ssd
 import imageio
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description = "Object Detection using SSD")
+    parser.add_argument("--input_video", "-iv", type = str, required = True,
+                            help = "Path to input video")
+    parser.add_argument("--output_video", "-ov", type = str, default = "output.mp4",
+                            help = "Path to Output Video")
+    parser.add_argument("--weights_file_path", "-wfp", type = str, 
+                            default = "ssd300_mAP_77.43_v2.pth",
+                            help = "Path to SSD Pretrained Weights file")
+    return parser.parse_args()
 
 # Defining a function that will do the detections
 def detect(frame, net, transform):
@@ -27,17 +39,20 @@ def detect(frame, net, transform):
             j += 1
     return frame
 
+# Parse Args
+args = parse_args()
+
 # Creating the SSD neural network
 net = build_ssd('test')
-net.load_state_dict(torch.load('ssd300_mAP_77.43_v2.pth', map_location = lambda storage, loc: storage))
+net.load_state_dict(torch.load(args.weights_file_path, map_location = lambda storage, loc: storage))
 
 # Creating the transformation
 transform = BaseTransform(net.size, (104/256.0, 117/256.0, 123/256.0))
 
 # Doing some Object Detection on a video
-reader = imageio.get_reader('funny_dog.mp4')
+reader = imageio.get_reader(args.input_video)
 fps = reader.get_meta_data()['fps']
-writer = imageio.get_writer('output.mp4', fps = fps)
+writer = imageio.get_writer(args.output_video, fps = fps)
 for i, frame in enumerate(reader):
     frame = detect(frame, net.eval(), transform)
     writer.append_data(frame)
